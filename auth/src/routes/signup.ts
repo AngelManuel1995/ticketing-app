@@ -4,7 +4,7 @@ import { Router } from 'express'
 
 const api = Router()
 
-api.get('/api/users/signup',  (req, res) => {
+api.post('/api/users/signup',  (req, res) => {
 	res.send({ok:true, status: 200})
 })
 
