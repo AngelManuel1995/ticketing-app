@@ -9,5 +9,6 @@ app.get('/',  (req, res) => {
 })
 
 app.listen(PORT, () => {
+	console.log('v2')
 	console.log(`Auth services is running on port ${PORT}`)
 })
