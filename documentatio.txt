@@ -1,0 +1,3 @@
+To always take into account when implementing microservices.
+
+To standardize de error stdout.
