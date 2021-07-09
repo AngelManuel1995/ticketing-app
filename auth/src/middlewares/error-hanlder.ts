@@ -6,7 +6,6 @@ export const errorHandler = (
 	req: Request, 
 	res: Response, 
 	next: NextFunction) => {
-	console.log('Someting went wrong. Upss!!!')
 
 	if (err instanceof CustomError) {
 		console.log('Error validation', err)
