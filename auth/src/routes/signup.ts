@@ -1,20 +1,28 @@
 'use strict'
 
 import { Router, Request, Response } from 'express'
-import { body, validationResult } from 'express-validator'
-import { DatabaseConnectionError } from '../errors/database-connection-error'
+import { validationResult } from 'express-validator'
 import { RequestValidationError } from '../errors/request-validation-error'
 import { SIGNUP_VALIDATORS } from '../validators/validators'
+import { User } from '../models/user'
+import { BadRequestError } from '../errors/bad-request-error'
 
 const api = Router()
 
-api.post('/api/users/signup', SIGNUP_VALIDATORS, (req: Request, res: Response) => {
+api.post('/api/users/signup', SIGNUP_VALIDATORS, async (req: Request, res: Response) => {
 	const errors = validationResult(req)
 	if(!errors.isEmpty()){
 		throw new RequestValidationError(errors.array())
 	}
-	throw new DatabaseConnectionError()
-	res.send({ok:true, status: 200})
+	const { email, password } = req.body
+	const existingUser = await User.findOne({email})
+	if(existingUser){
+		console.log('Email in use')
+		throw new BadRequestError('Email in use')
+	}
+	const user = User.build({email, password})
+	await user.save()
+	res.status(201).send(user)
 })
 
 export { api as signupRouter }
