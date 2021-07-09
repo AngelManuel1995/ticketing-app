@@ -5,8 +5,13 @@ interface UserAttrs {
 	password: string;
 }
 
-interface UserModel extends mongoose.Model<any> {
-	build(attrs: UserAttrs): any
+interface UserModel extends mongoose.Model<UserDoc> {
+	build(attrs: UserAttrs): UserDoc
+}
+
+interface UserDoc extends mongoose.Document {
+	email: string;
+	password: string;
 }
 
 const UserSchema = new mongoose.Schema({
@@ -18,14 +23,14 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	}
-})
+}, { timestamps: true })
 
 UserSchema.statics.build = async function (attrs: UserAttrs) {
 	return new User(attrs)
 }
 
-const User = mongoose.model<any, UserModel>('User', UserSchema)
+const User = mongoose.model<UserDoc, UserModel>('User', UserSchema)
 
-User.build({email:'as', password:'as'})
+const user = User.build({email:'as', password:'as'})
 
 export { User }
