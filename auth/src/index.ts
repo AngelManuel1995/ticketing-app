@@ -1,6 +1,8 @@
 'use strict'
 
 import express from 'express'
+import mongoose  from 'mongoose'
+
 import 'express-async-errors'
 
 import { currentUserRouter } from './routes/current-user'
@@ -23,7 +25,21 @@ app.all('*', async (req, res) => {
 })
 app.use(errorHandler)
 
-app.listen(PORT, () => {
-	console.log('v9')
-	console.log(`Auth services is running on port ${PORT}`)
-})
+const start = async () => {
+	try {
+		await mongoose.connect('mongodb://auth-mongo-srv:27017/auth',  {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			useCreateIndex: true
+		})
+		console.log('Connected to mongoDb')
+	} catch (error) {
+		console.log(error)
+	}
+	app.listen(PORT, () => {
+		console.log('v9')
+		console.log(`Auth service is running on port ${PORT}`)
+	})
+}
+
+start()
