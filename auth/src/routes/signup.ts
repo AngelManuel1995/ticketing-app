@@ -6,7 +6,7 @@ import { RequestValidationError } from '../errors/request-validation-error'
 import { SIGNUP_VALIDATORS } from '../validators/validators'
 import { User } from '../models/user'
 import { BadRequestError } from '../errors/bad-request-error'
-
+import jwt from 'jsonwebtoken'
 const api = Router()
 
 api.post('/api/users/signup', SIGNUP_VALIDATORS, async (req: Request, res: Response) => {
@@ -17,12 +17,18 @@ api.post('/api/users/signup', SIGNUP_VALIDATORS, async (req: Request, res: Respo
 	const { email, password } = req.body
 	const existingUser = await User.findOne({email})
 	if(existingUser){
-		console.log('Email in use')
 		throw new BadRequestError('Email in use')
 	}
 	const user = User.build({email, password})
 	try {
 		await user.save()
+		const userJwt = jwt.sign({
+			id: user.id,
+			email: user.email
+		}, 'asdf')
+		req.session = {
+			userJwt
+		}
 		res.status(201).send(user)
 	} catch (error) {
 		throw new BadRequestError(error.message)		
