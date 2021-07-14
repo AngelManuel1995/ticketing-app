@@ -16,6 +16,12 @@ spec:
       containers:
         - name: auth
           image: angelgoez/auth:latest
+          tty: true
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: JWT_KEY
               valueFrom:
