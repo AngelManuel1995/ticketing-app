@@ -25,7 +25,7 @@ api.post('/api/users/signup', SIGNUP_VALIDATORS, async (req: Request, res: Respo
 		const userJwt = jwt.sign({
 			id: user.id,
 			email: user.email
-		}, 'asdf')
+		}, process.env.JWT_KEY!)
 		req.session = {
 			userJwt
 		}
