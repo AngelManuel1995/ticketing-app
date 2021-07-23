@@ -30,6 +30,8 @@ const UserSchema = new mongoose.Schema({
 	toJSON: { 
 		transform (doc, rec) {
 			rec.id = rec._id
+			delete rec.createdAt
+			delete rec.updatedAt
 			delete rec._id
 			delete rec.password
 			delete rec.__v
