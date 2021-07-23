@@ -5,7 +5,8 @@ import { Router } from 'express'
 const api = Router()
 
 api.post('/api/users/signout',  (req, res) => {
-	res.send({ok:true, status: 200})
+	req.session = null
+	res.send({})
 })
 
 export { api as signoutRouter }
