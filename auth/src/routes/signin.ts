@@ -1,17 +1,27 @@
 'use strict'
 
 import { Router, Request, Response } from 'express'
-import { validationResult } from 'express-validator'
-import { RequestValidationError } from '../errors/request-validation-error'
+import { validateRequest } from '../middlewares/validate-request'
 import { SIGNIN_VALIDATORS } from '../validators/validators'
+import { BadRequestError } from '../errors/bad-request-error'
+import { User } from '../models/user'
+import { Password } from '../services/password'
+import jwt from 'jsonwebtoken'
 const api = Router()
 
-api.post('/api/users/signin', SIGNIN_VALIDATORS, async (req: Request, res: Response) => {
-	const errors = validationResult(req)
-	if(!errors.isEmpty()){
-		throw new RequestValidationError(errors.array())
+api.post('/api/users/signin', SIGNIN_VALIDATORS, validateRequest, async (req: Request, res: Response) => {
+	const { email, password } = req.body
+	const existingUser = await User.findOne({email})
+	if(!existingUser){
+		throw new BadRequestError('Invalid credentials')
 	}
-	res.send({ok:true, status: 200})
+	const passwordMatch = await Password.compare(existingUser.password, password)
+	if(!passwordMatch){
+		throw new BadRequestError('Invalid credentials')
+	}
+	const userJwt = jwt.sign({ id: existingUser.id, email: existingUser.email }, process.env.JWT_KEY!)
+	req.session = { userJwt }
+	res.status(200).send(existingUser)
 })
 
 export { api as signinRouter }

@@ -1,19 +1,14 @@
 'use strict'
 
 import { Router, Request, Response } from 'express'
-import { validationResult } from 'express-validator'
-import { RequestValidationError } from '../errors/request-validation-error'
 import { SIGNUP_VALIDATORS } from '../validators/validators'
 import { User } from '../models/user'
 import { BadRequestError } from '../errors/bad-request-error'
 import jwt from 'jsonwebtoken'
+import { validateRequest } from '../middlewares/validate-request'
 const api = Router()
 
-api.post('/api/users/signup', SIGNUP_VALIDATORS, async (req: Request, res: Response) => {
-	const errors = validationResult(req)
-	if(!errors.isEmpty()){
-		throw new RequestValidationError(errors.array())
-	}
+api.post('/api/users/signup', SIGNUP_VALIDATORS, validateRequest, async (req: Request, res: Response) => {
 	const { email, password } = req.body
 	const existingUser = await User.findOne({email})
 	if(existingUser){
