@@ -1,20 +1,13 @@
 'use strict'
 
-import jwt from 'jsonwebtoken'
 import { Router } from 'express'
+import { currentUser } from '../middlewares/current-user'
+import { requireAuth } from '../middlewares/require-auth'
 
 const api = Router()
 
-api.get('/api/users/currentuser',  (req, res) => {
-	if(!req.session?.jwt) {
-		return res.send({currentUser: null})
-	}
-	try {
-		const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!)
-		res.send({currentUser: payload})
-	} catch (error) {
-		res.send({currentUser: null})
-	}
+api.get('/api/users/currentuser', currentUser, requireAuth, (req, res) => {
+	res.send({currentUser: req.currentUser || null})
 })
 
 export { api as currentUserRouter }
