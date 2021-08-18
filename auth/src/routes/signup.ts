@@ -3,9 +3,9 @@
 import { Router, Request, Response } from 'express'
 import { SIGNUP_VALIDATORS } from '../validators/validators'
 import { User } from '../models/user'
-import { BadRequestError } from '../errors/bad-request-error'
+import { BadRequestError, validateRequest } from '@magtickets/common'
 import jwt from 'jsonwebtoken'
-import { validateRequest } from '../middlewares/validate-request'
+
 const api = Router()
 
 api.post('/api/users/signup', SIGNUP_VALIDATORS, validateRequest, async (req: Request, res: Response) => {

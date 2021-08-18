@@ -1,9 +1,8 @@
 'use strict'
 
 import { Router, Request, Response } from 'express'
-import { validateRequest } from '../middlewares/validate-request'
+import { validateRequest, BadRequestError } from '@magtickets/common'
 import { SIGNIN_VALIDATORS } from '../validators/validators'
-import { BadRequestError } from '../errors/bad-request-error'
 import { User } from '../models/user'
 import { Password } from '../services/password'
 import jwt from 'jsonwebtoken'
