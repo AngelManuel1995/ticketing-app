@@ -25,7 +25,7 @@ api.post('/api/users/signup', SIGNUP_VALIDATORS, validateRequest, async (req: Re
 			userJwt
 		}
 		res.status(201).send(user)
-	} catch (error) {
+	} catch (error:any) {
 		throw new BadRequestError(error.message)		
 	}
 })
