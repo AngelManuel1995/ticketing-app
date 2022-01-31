@@ -1,11 +1,13 @@
-import {Message} from 'node-nats-streaming'
+import { Message } from 'node-nats-streaming'
 import { Listener } from './basic-listener'
+import { TicketCreatedEvent } from './ticket-created-event'
+import { Subjects } from './subjects'
 
-export class TicketCreatedListener extends Listener{
-	subject: string = 'ticket:created'
+export class TicketCreatedListener extends Listener <TicketCreatedEvent> {
+	subject: Subjects.TicketCreated = Subjects.TicketCreated
 	queueGroupName: string = 'payments-service';
 
-	onMessage(data: any, message: Message): void {
+	onMessage(data: TicketCreatedEvent['data'], message: Message): void {
 		console.log('Event data! ', data)
 		message.ack()
 	}
