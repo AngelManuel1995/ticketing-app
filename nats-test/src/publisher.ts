@@ -9,12 +9,18 @@ const stan = nats.connect('ticketing', 'abc', {
 	url:"http://localhost:4222"
 })
 
-stan.on('connect', () => {
+stan.on('connect', async () => {
 	console.log('Publiser connected to NATS')
 	const publisher = new TicketCreatedPublisher(stan)
-	publisher.publish({
-		id:'',
-		title: '',
-		price:0
-	})
+
+	try {
+		await publisher.publish({
+			id:'1s18xa9',
+			title: 'This is the first event',
+			price: Number ((Math.random() * 10).toFixed(0))
+		})
+	} catch (err) {
+		console.log(err)
+	}
+
 })
