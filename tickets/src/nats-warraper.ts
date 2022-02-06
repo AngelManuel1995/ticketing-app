@@ -14,11 +14,11 @@ class NatsWrapper {
 	connect (clustedId: string, clientId: string, url: string) {
 		this._client = nats.connect(clustedId, clientId,  { url })
 		return new Promise<void>((resolve, reject) => {
-			this._client!.on('connect', () => {
+			this.client.on('connect', () => {
 				console.log('Connected to NATS')
 				resolve()
 			})
-			this._client!.on('error', () => {
+			this.client.on('error', () => {
 				reject()
 			})
 		})
