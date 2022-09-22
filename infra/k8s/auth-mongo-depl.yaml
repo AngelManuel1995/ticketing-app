@@ -16,6 +16,11 @@ spec:
       containers:
         - name: tickets-mongo
           image: mongo
+          env:
+           - name: MONGO_INITDB_ROOT_USERNAME
+             value: "authuser"
+           - name: MONGO_INITDB_ROOT_PASSWORD
+             value: "authpassword"
 ---
 apiVersion: v1
 kind: Service
